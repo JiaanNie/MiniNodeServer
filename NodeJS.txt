@@ -1,0 +1,56 @@
+NodeJS
+- whenever you see the require('some-package') is a commonJS syntax for importing packages
+- global is an object that contain all the global variables so you can access it from anywhere within your project.
+	- which contain functions like setInterval etc...
+- there are also some global values that you can access it anywhere from the nodejs project
+	- __dirname return the current path of the folder that you are in
+	- __filename return the current file name that you are in
+	- process return an object contain meta data about the process and system
+- Core Packages that come with Nodejs AKA common core modules
+	- os
+	- path
+		- contain functions like:
+			- path.dirname(__filename) return the same value as __dirname
+			- path.basename(__filename) return the name of the file without the extension like .txt .html ect...
+			- path.extname(__filename) return the extension name of the file
+			- path.parse(__filename) return an object that contain meta data about the file such as path, ext, folder, root etc...
+	- fs
+		-functions you use:
+			- fs.existsSync
+				- check if the folder exists
+		- for reading and writing files, normally you want the promises of it. since you want to write async code
+			- fsPromises = require('fs').promises, they contain functions like
+				- writeFile
+				- appendFile
+				- renameFile
+			- make sure you use async infront of those operations
+
+	- events
+		- create a class that extend the events class, create a new instance of the class,
+			- myEmitter.on("eventName" callback(args...))
+			- myEmitter.emit("eventName", args...)
+	- http
+		- createServer function help you start on getting request and sending response
+
+
+
+i have no fucking ideal why the favicon.ico getting requested no fucking clude aaaaaaaaa
+	- is likly some default call from html file, we can just ignore it
+	
+
+ExpressJS
+	- create a instance by calling the app = express()
+	- app.get take in a url-path and callback which it take in a request and response object
+		- the url-path param also accpect regx
+	- middlewares
+		- routerHandlers is baically a middlewares 
+		- middlewares are anything you do that between the request and response
+			- 3 types of middlewares
+				- buildin
+				- customs
+				- 3party
+	- app.use does not accpect regex in older version however in newer version it does support regex
+	- difference between app.all and app.get
+VS-code short cuts
+	shift+alt+down-arrow: whatever is being highlighted get copy and paste direct blow
+	contrl+D+click: allow you edit all the same name in that file 
