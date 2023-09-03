@@ -1,35 +1,32 @@
 const data = {
     employees: require('../model/employees.json'),
-    setEmployees: (data) => this.employee =  data
+    setEmployees: function (data) {this.employees = data}
 
 }
+const fsPromise = require('fs').promises
+const path = require('path')
+
+
 
 const getAllEmployees = (req, res) => {
-    res.json(data.employee)
+    res.json(data.employees)
 }
 
-const createNewEmployee = (req, res) => {
-    // at the moment we just want to return the post data
-    // and learning how to access the data from the request
-    // res.json({
-    //     "firstname": req.body.firstname,
-    //     "lastname": req.body.lastname
-    // })
-
+const createNewEmployee = async (req, res) => {
+    // we want to make sure the req.body object contain firstname and lastname
+    if(!req.body.firstname || !req.body.lastname) {
+        return res.status(400).json({'message': 'firstname and lastname are required'})
+    }
     // create a new employee object
     const newEmployee = {
         id: data.employees[data.employees.length -1].id + 1 || 1,
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
-    // we want to make sure the req.body object contain firstname and lastname
-    if(!newEmployee.firstname || !newEmployee.lastname) {
-        return res.status(400).json({'message': 'firstname and lastname are required'})
-    }
     data.setEmployees([...data.employees, newEmployee])
-    res.json(data.employees)
-
-
+    console.log(data.employees)
+    await fsPromise.writeFile(path.join(__dirname, '..', 'model', 'employees.json'), JSON.stringify(data.employees))
+    res.status(200).json({message: "new employee added"})
 }
 
 const updateEmployee = (req, res) => {

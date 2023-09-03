@@ -24,6 +24,9 @@ const handleNewUser = async (req, res) => {
     // create new users
     const newUser = {
         'username': username,
+        'roles': {
+          "User": 2000  
+        },
         'password': await bcrypt.hash(password, 10)
     }
     console.log(newUser)

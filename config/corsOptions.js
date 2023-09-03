@@ -4,11 +4,11 @@
 // only allow the people that in the whitelist that can access your server
 
 // even if you put undefined in the whitelist it doesnt work 
-const whitelist  = ['www.yourdomain.com', 'http://localhost:3500']
+const allowOrigins = require('./allowOrigins')
 const corsOptions = {
     origin: (sender, callback) => {
         // for dev env you need the !origin because the sender from your localhost is undefine
-        if(whitelist.indexOf(sender) !== -1 || !sender) {
+        if(allowOrigins.indexOf(sender) !== -1 || !sender) {
             callback(null, true)
         }
         else {

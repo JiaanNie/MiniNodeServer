@@ -10,7 +10,11 @@ const employeesRouter = require('./routers/api/employees')
 const corsOptions = require('./config/corsOptions')
 const registerRouter = require('./routers/api/register')
 const authRouter = require('./routers/api/auth')
-
+const refreshTokenRoute = require('./routers/api/refreshToken')
+const logoutRoute = require('./routers/api/logout')
+const {verifyJWT} = require('./middlewares/jwtVerifier')
+const cookieParser = require('cookie-parser')
+const credentials = require('./middlewares/credentials')
 const app = express()
 // let use some buildin middlewares
 
@@ -22,7 +26,16 @@ const app = express()
 // all these are buildin middlewares
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+app.use(cookieParser())
 // the default value is the / you dont need but for reability i think is good to have it
+
+// the modual.export=<name> has to match when you import it using the require statment
+app.use(credentials)
+//3party middlewares cors
+
+app.use(cors(corsOptions))
+
+app.use(errorHanlder)
 
 app.use('/',express.static(path.join(__dirname, "public")))
 
@@ -35,14 +48,13 @@ app.use('/', rootRouter)
 app.use('/register', registerRouter)
 app.use('/subdir', subdirRouter )
 app.use('/auth', authRouter)
-
+app.use('/refresh', refreshTokenRoute)
+app.use('/logout', logoutRoute)
 // protected routes
+app.use(verifyJWT)
 app.use('/employees', employeesRouter)
 
 
-//3party middlewares cors
-
-app.use(cors(corsOptions))
 
 
 // custom middlewares
@@ -101,7 +113,5 @@ app.all('*', (req, res)=> {
 })
 // adding custom error handler middleware
 // the order of the param does matter ahhhh
-app.use(errorHanlder)
-
 
 app.listen(PORT, () => { console.log(`Server is running at ${PORT}`)})

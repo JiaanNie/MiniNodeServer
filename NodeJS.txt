@@ -53,4 +53,36 @@ ExpressJS
 	- difference between app.all and app.get
 VS-code short cuts
 	shift+alt+down-arrow: whatever is being highlighted get copy and paste direct blow
-	contrl+D+click: allow you edit all the same name in that file 
+	contrl+D+click: allow you edit all the same name in that file
+
+3rd Party Packages:
+	- jsonwebtoken (JWT)
+		- to create a token
+			- you need a secret key, make sure no one but you have access to it
+			- data that you wanted to encode into the token, after decoding the token you can use those data to vaildate
+			- use the .sign function to create the token
+		- in auth flow you want to generate two type of tokens
+			- access token
+				- access token allow you to access projected apis
+				- this token generally expire in 5 to 10 min shot life span
+				- for frontend dev make sure store this token in memory, NOT local storage or cookies
+					- that way if the user close the application the token will be gone
+			- refresh token
+				- refresh token allow you to request another access token, once the old one expired
+				- this token have a longer life span between few days
+				- you can make this token last forever but not recommented 
+				- for frontend dev store this token in a httpOnly cookies, that way you cant get it using javascript, however is still not 100% safe
+
+
+	- bcrypt
+	- cors
+		- before applying the cors options, you need to set "Access-Control-Allow-Credentials" in the header and set it to "true"
+	- dotenv
+	- cookie-parser
+
+
+	for frontned
+		- if you use fetch to access this auth route
+			- you need to set the option "credentials: include"
+		- if you use axios you also need to set a flag
+

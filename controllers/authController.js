@@ -3,6 +3,13 @@ const userDB = {
     setUsers: function (data) {this.users = data}
 }
 const bcrypt = require('bcrypt')
+const fsPromises = require('fs').promises
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
+const dotenv = require('dotenv')
+const path = require('path')
+dotenv.config()
+
 
 // this route handler handle user login
 // first check if the request body contain username and passward
@@ -19,16 +26,49 @@ const handleLogin = async (req, res) => {
 
     //find the users
     const foundUser = userDB.users.find((u)=>{
-        u.username === username
-        return u
+        if(u.username === username) {
+            return u
+        }
     })
-    console.log(foundUser, username, userDB.users)
-    if(!foundUser) return res.status(404).json({'message': 'user not found'})
+
+    if(!foundUser) return res.status(401).json({'message': 'unauthorized'})
+    // vaildate the password 
     if(!foundUser.password === await bcrypt.compare(password, foundUser.password)) return res
-        .status('400')
-        .json({'message': 'invalid login credentails'})
+        .status('401')
+        .json({'message': 'Unauthorized'})
     
-    return res.status(200).json({'message': `success login for user ${username}`})
+    // create jwt here
+
+    // create access token 
+    const accessToken = jwt.sign(
+        {
+            "UserInfo": {
+                username: foundUser.username,
+                roles: Object.values(foundUser.roles)
+            }
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: "30s"}
+    )
+
+    // create refresh token
+    const refreshToken = jwt.sign(
+        {"username": foundUser.username},
+        process.env.REFRESH_TOKEN_SECRET,
+        {expiresIn: "1d"}
+    )
+    const otherUsers = userDB.users.filter((u)=> u.username !== foundUser.username)
+    const currentUser = {...foundUser, "refreshToken": refreshToken} 
+    userDB.setUsers([...otherUsers, currentUser])
+    await fsPromises.writeFile(path.join(__dirname, "..", "model", "users.json"), JSON.stringify(userDB.users))
+    //when user login we added refresh token so we can cross reference
+    // when you deleting the cookie you also need to pass in the same options, however  maxAge and expiredIn are the only option you do need to added in the option
+    res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000})
+
+    return res.status(200).json({
+        'message': `success login for user ${username}`,
+        'accessToken': accessToken
+    })
 }
 
 module.exports = {handleLogin}

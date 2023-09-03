@@ -8,3 +8,8 @@
 2023-08-31	11:11:16	b966c496-e60e-4b89-8af5-b4d073302143	/data/data.json GET undefined
 2023-08-31	11:11:16	ee5932c0-812d-4e72-a9a1-b6b6f76c23c8	/data/css/style.css GET undefined
 2023-08-31	13:50:03	9bf93889-1a08-48e3-a450-da6782095dd4	/employee/ GET undefined
+2023-09-02	08:53:56	70a5602d-3674-4759-82a5-639ecd2457be	/favicon.ico GET undefined
+2023-09-02	08:57:04	02e06a01-5490-4580-b6bd-9ad03c0fc859	/new-page.html GET undefined
+2023-09-02	08:57:04	d9ef8453-b87a-4ce3-a210-ef182ad061b9	/css/style.css GET undefined
+2023-09-02	08:57:04	1e50bf9a-a241-465c-a529-e3f5a7d7965c	/img/img1.jpg GET undefined
+2023-09-02	08:57:32	29cdfd11-a859-44e5-aadb-2c0e9f33da63	/auth/ POST undefined
