@@ -86,3 +86,6 @@ VS-code short cuts
 			- you need to set the option "credentials: include"
 		- if you use axios you also need to set a flag
 
+MongoDB:
+	- when create a model file or schema, the file name start with a capital letter by convension
+	
