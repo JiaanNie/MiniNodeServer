@@ -15,6 +15,12 @@ const logoutRoute = require('./routers/api/logout')
 const {verifyJWT} = require('./middlewares/jwtVerifier')
 const cookieParser = require('cookie-parser')
 const credentials = require('./middlewares/credentials')
+require('dotenv').config()
+const mongoose = require('mongoose')
+
+const connectDB =  require('./config/dbConfig')
+
+connectDB()
 const app = express()
 // let use some buildin middlewares
 
@@ -34,6 +40,7 @@ app.use(credentials)
 //3party middlewares cors
 
 app.use(cors(corsOptions))
+console.log(process.env.PREFIX, process.env.SERVER)
 
 app.use(errorHanlder)
 
@@ -113,5 +120,8 @@ app.all('*', (req, res)=> {
 })
 // adding custom error handler middleware
 // the order of the param does matter ahhhh
+mongoose.connection.once("open", () => {
+    console.log("connected to mongo db")
+    app.listen(PORT, () => { console.log(`Server is running at ${PORT}`)})
 
-app.listen(PORT, () => { console.log(`Server is running at ${PORT}`)})
+})
