@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const path = require('path')
+const User = require('../model/User')
 dotenv.config()
 
 
@@ -25,11 +26,13 @@ const handleLogin = async (req, res) => {
     if(!username || !password) return res.status(400).json({'message': 'username and password are required!'})
 
     //find the users
-    const foundUser = userDB.users.find((u)=>{
-        if(u.username === username) {
-            return u
-        }
-    })
+    // const foundUser = userDB.users.find((u)=>{
+    //     if(u.username === username) {
+    //         return u
+    //     }
+    // })
+    const foundUser = await User.findOne({username}).exec()
+    console.log(foundUser)
 
     if(!foundUser) return res.status(401).json({'message': 'unauthorized'})
     // vaildate the password 
@@ -57,10 +60,14 @@ const handleLogin = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         {expiresIn: "1d"}
     )
-    const otherUsers = userDB.users.filter((u)=> u.username !== foundUser.username)
-    const currentUser = {...foundUser, "refreshToken": refreshToken} 
-    userDB.setUsers([...otherUsers, currentUser])
-    await fsPromises.writeFile(path.join(__dirname, "..", "model", "users.json"), JSON.stringify(userDB.users))
+    // after creating two tokens we want to update the user's refresh token
+    await foundUser.updateOne({refreshToken})
+
+
+    // const otherUsers = userDB.users.filter((u)=> u.username !== foundUser.username)
+    // const currentUser = {...foundUser, "refreshToken": refreshToken} 
+    // userDB.setUsers([...otherUsers, currentUser])
+    // await fsPromises.writeFile(path.join(__dirname, "..", "model", "users.json"), JSON.stringify(userDB.users))
     //when user login we added refresh token so we can cross reference
     // when you deleting the cookie you also need to pass in the same options, however  maxAge and expiredIn are the only option you do need to added in the option
     res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000})

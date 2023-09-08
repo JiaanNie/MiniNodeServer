@@ -1,15 +1,17 @@
-const data = {
-    employees: require('../model/employees.json'),
-    setEmployees: function (data) {this.employees = data}
+// const data = {
+//     employees: require('../model/employees.json'),
+//     setEmployees: function (data) {this.employees = data}
 
-}
-const fsPromise = require('fs').promises
-const path = require('path')
+// }
+// const fsPromise = require('fs').promises
+// const path = require('path')
+const Employee = require('../model/Employee')
 
 
 
-const getAllEmployees = (req, res) => {
-    res.json(data.employees)
+const getAllEmployees = async (req, res) => {
+    const employees = await Employee.find()
+    res.json(employees)
 }
 
 const createNewEmployee = async (req, res) => {
@@ -17,33 +19,51 @@ const createNewEmployee = async (req, res) => {
     if(!req.body.firstname || !req.body.lastname) {
         return res.status(400).json({'message': 'firstname and lastname are required'})
     }
+    // check if the employee already exist in the db. lets assume fullname has to be different
+    const foundEmployee = await Employee.findOne({firstname: req.body.firstname, lastname: req.body.lastname}).exec()
+    if(foundEmployee) return res.sendStatus(409)
+
     // create a new employee object
     const newEmployee = {
-        id: data.employees[data.employees.length -1].id + 1 || 1,
         firstname: req.body.firstname,
         lastname: req.body.lastname
     }
-    data.setEmployees([...data.employees, newEmployee])
-    console.log(data.employees)
-    await fsPromise.writeFile(path.join(__dirname, '..', 'model', 'employees.json'), JSON.stringify(data.employees))
-    res.status(200).json({message: "new employee added"})
+    try {
+        const result = await Employee.create(newEmployee)
+        res.status(200).json({message: "new employee added"})
+
+    }catch (e) {
+        console.log(e)
+        res.status(500).json({message: "something we wrong when creating new user"})
+    }
+    // data.setEmployees([...data.employees, newEmployee])
+    // console.log(data.employees)
+    // await fsPromise.writeFile(path.join(__dirname, '..', 'model', 'employees.json'), JSON.stringify(data.employees))
+    // res.status(200).json({message: "new employee added"})
 }
 
-const updateEmployee = (req, res) => {
+const updateEmployee = async (req, res) => {
     // res.json({
     //     "firstname": req.body.firstname,
     //     "lastname": req.body.lastname
     // })
-    const employee = data.employees.find(emp => emp.id === parseInt(req.body.id));
+    // const employee = data.employees.find(emp => emp.id === parseInt(req.body.id));
+    const employee = await Employee.findById(req.body.id)
     if (!employee) {
         return res.status(400).json({ "message": `Employee ID ${req.body.id} not found` });
     }
-    if (req.body.firstname) employee.firstname = req.body.firstname;
-    if (req.body.lastname) employee.lastname = req.body.lastname;
-    const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
-    const unsortedArray = [...filteredArray, employee];
-    data.setEmployees(unsortedArray.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
-    res.json(data.employees);
+    try {
+        const result = await Employee.findOneAndUpdate({_id: req.body.id}, {firstname: req.body.firstname, lastname: req.body.lastname})
+    }catch(e){
+        console.log(e)
+    }
+
+    // if (req.body.firstname) employee.firstname = req.body.firstname;
+    // if (req.body.lastname) employee.lastname = req.body.lastname;
+    // const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
+    // const unsortedArray = [...filteredArray, employee];
+    // data.setEmployees(unsortedArray.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
+    res.json({"message": "employee updated"});
 
 
 

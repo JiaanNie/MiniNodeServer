@@ -1,10 +1,10 @@
 // don't user arrow function this.uers=data will not work
-const userDB = {
-    users: require('../model/users.json'),
-    setUsers: function(data) {this.users = data}
-}
-const fsPromises = require('fs').promises
-const path = require('path')
+// const userDB = {
+//     users: require('../model/users.json'),
+//     setUsers: function(data) {this.users = data}
+// }
+// const fsPromises = require('fs').promises
+// const path = require('path')
 const bcrypt = require('bcrypt')
 const User = require('../model/User')
 
@@ -25,7 +25,8 @@ const handleNewUser = async (req, res) => {
     // create new users
     const result = await User.create({
         'username': username,
-        'password': await bcrypt.hash(password, 10)
+        'password': await bcrypt.hash(password, 10),
+        'refreshToken': ''
     })
     console.log(result)
 
