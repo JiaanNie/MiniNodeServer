@@ -23,16 +23,18 @@ const handleNewUser = async (req, res) => {
     if(foundUser) return res.status(409).json({'message': 'username already exist!'})
 
     // create new users
-    const result = await User.create({
-        'username': username,
-        'password': await bcrypt.hash(password, 10),
-        'refreshToken': ''
-    })
-    console.log(result)
-
-    // userDB.setUsers([...userDB.users, newUser])
-    // await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users))
-    return res.status(200).json({'message':  `User ${username} has been created!`})
+    try {
+        const result = await User.create({
+            'username': username,
+            'password': await bcrypt.hash(password, 10),
+            'refreshToken': ''
+        })
+        // userDB.setUsers([...userDB.users, newUser])
+        // await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users))
+        return res.status(200).json({'message':  `User ${username} has been created!`})
+    }catch(error) {
+        console.log(error)
+    }
 }
 
 module.exports = {handleNewUser}
