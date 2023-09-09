@@ -10,6 +10,7 @@ const Employee = require('../model/Employee')
 
 
 const getAllEmployees = async (req, res) => {
+    console.log(req.params)
     const employees = await Employee.find()
     res.json(employees)
 }
@@ -54,6 +55,7 @@ const updateEmployee = async (req, res) => {
     }
     try {
         const result = await Employee.findOneAndUpdate({_id: req.body.id}, {firstname: req.body.firstname, lastname: req.body.lastname})
+        res.json({"message": "employee updated"});
     }catch(e){
         console.log(e)
     }
@@ -63,32 +65,43 @@ const updateEmployee = async (req, res) => {
     // const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
     // const unsortedArray = [...filteredArray, employee];
     // data.setEmployees(unsortedArray.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
-    res.json({"message": "employee updated"});
 
 
 
 }
 
-const deleteEmployee = (req, res) => {
+const deleteEmployee = async (req, res) => {
     // at the moment we just want to return the post data
     // and learning how to access the data from the request
     // res.json({
     //     "id": req.body.id,
     // })
-    const employee = data.employees.find(emp => emp.id === parseInt(req.body.id));
-    if (!employee) {
+    // const employee = data.employees.find(emp => emp.id === parseInt(req.body.id));
+    const foundEmployee = await Employee.findOne({firstname: req.body.firstname, lastname: req.body.lastname}).exec()
+    if (!foundEmployee) {
         return res.status(400).json({ "message": `Employee ID ${req.body.id} not found` });
     }
-    const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
-    data.setEmployees([...filteredArray]);
-    res.json(data.employees);
+    // const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
+    // Employee.findOneAndDelete
+    // data.setEmployees([...filteredArray]);
+    
+    try{
+        const result = await foundEmployee.deleteOne()
+        res.status(200).json({"message": "employee has been deleted"})
+    }catch(e) {
+        console.log(e)
+    }
 }
 
-const getEmployee = (req, res) => {
+const getEmployee = async (req, res) => {
     // res.json({'id': req.params.id})
-    const employee = data.employees.find(emp => emp.id === parseInt(req.params.id));
+    const params =  req.params
+    if(!params?.id) return res.status(400).json({message: "missing employee id"});
+
+    // fetch the employee from the mongdb
+    const employee = await Employee.findById(params.id)
     if (!employee) {
-        return res.status(400).json({ "message": `Employee ID ${req.params.id} not found` });
+        return res.status(200).json({ "message": `Employee with ID: ${req.params.id} not found` });
     }
     res.json(employee);
 }
