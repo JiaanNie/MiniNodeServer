@@ -10,12 +10,11 @@ const User = require('../model/User')
 const handleLogout = async (req, res) => {
     // for frontend need to delete the access token
     const cookie = req.cookies
-    console.log(cookie)
     if(!cookie?.jwt) return res.sendStatus(204)
 
     const refreshToken = cookie.jwt
     // const foundUser = userDB.users.find((u)=> u.refreshToken === refreshToken)
-    const foundUser = await User.find({refreshToken})
+    const foundUser = await User.findOne({refreshToken}).exec()
     if(!foundUser) {
         // clear cookie when clearing cookie you need to pass in the same option that you have set perviously
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })

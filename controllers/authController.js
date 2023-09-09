@@ -70,7 +70,7 @@ const handleLogin = async (req, res) => {
     // await fsPromises.writeFile(path.join(__dirname, "..", "model", "users.json"), JSON.stringify(userDB.users))
     //when user login we added refresh token so we can cross reference
     // when you deleting the cookie you also need to pass in the same options, however  maxAge and expiredIn are the only option you do need to added in the option
-    res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000})
+    res.cookie('jwt', refreshToken, {httpOnly: true, sameSite: 'None', secure: false , maxAge: 24 * 60 * 60 * 1000})
 
     return res.status(200).json({
         'message': `success login for user ${username}`,
