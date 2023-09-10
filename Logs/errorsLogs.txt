@@ -12,3 +12,13 @@
 2023-09-02	08:22:31	06d23f68-d6b5-4cf8-9574-52a8cfede044	/employees/ undefined GET Cannot set headers after they are sent to the client
 2023-09-02	08:24:02	e423d2ba-5605-47f6-937b-845bb2e601ba	/employees/ undefined GET Cannot set headers after they are sent to the client
 2023-09-02	08:31:48	5fa219ad-e3ec-4f7a-85a9-2e73a6c75b36	/employees/ undefined GET Cannot set headers after they are sent to the client
+2023-09-10	09:25:18	19c09d0a-536b-41c7-b55d-3fa1e1325355	/register http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:28:54	6aed5ad7-a0ed-4fc8-a2dc-80bd386d55c1	/register http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:30:13	4e30a929-5f58-49cc-b3be-740216169c9e	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:31:44	e1862b06-5f15-4a01-a955-ef3ffa3bf904	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:34:16	bd160d9a-e432-46da-9e17-ffc8a8ea0e0b	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:42:39	83714b65-2516-4563-b80d-c40e2f533b51	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:43:16	ad931a49-6075-4367-b35d-ab35cfc3c960	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:44:14	645dab30-ba1e-4bb5-af0c-0f5f561c28b6	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:44:53	06fea9d1-b8ac-4097-9a8b-0b0f9923efec	/register/ http://localhost:3000 OPTIONS res.headers is not a function
+2023-09-10	09:46:43	1d80ae98-36ca-4e39-82fb-b597ab7347a7	/register/ http://localhost:3000 OPTIONS res.headers is not a function
