@@ -40,9 +40,7 @@ const handleLogin = async (req, res) => {
 
   if (!foundUser) return res.status(401).json({ message: "unauthorized" });
   // vaildate the password
-  if (
-    !foundUser.password === (await bcrypt.compare(password, foundUser.password))
-  )
+  if (!(await bcrypt.compare(password, foundUser.password)))
     return res.status("401").json({ message: "Unauthorized" });
 
   // create jwt here
@@ -56,14 +54,14 @@ const handleLogin = async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "15s" }
   );
 
   // create refresh token
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "15s" }
   );
   // after creating two tokens we want to update the user's refresh token
   await foundUser.updateOne({ refreshToken });
@@ -77,7 +75,7 @@ const handleLogin = async (req, res) => {
   res.cookie("jwt", refreshToken, {
     httpOnly: true,
     sameSite: "None",
-    secure: false,
+    secure: true,
     maxAge: 24 * 60 * 60 * 1000,
   });
 
