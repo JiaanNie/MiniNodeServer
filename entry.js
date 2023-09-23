@@ -1,27 +1,38 @@
-const path = require("path");
-const express = require("express");
-const { logger } = require("./middlewares/logEvent");
-const cors = require("cors");
-const errorHanlder = require("./middlewares/errorHanlder");
-const PORT = process.env.PORT || 3500;
-const subdirRouter = require("./routers/subdir");
-const rootRouter = require("./routers/root");
-const employeesRouter = require("./routers/api/employees");
+//configuration files
+require("dotenv").config();
+const connectDB = require("./config/dbConfig");
 const corsOptions = require("./config/corsOptions");
+
+// core packages from nodejs
+const path = require("path");
+
+// external packages installed via npm
+const express = require("express");
+const mongoose = require("mongoose");
+
+// custom middlewares
+const { logger } = require("./middlewares/logEvent");
+const errorHanlder = require("./middlewares/errorHanlder");
+const { verifyJWT } = require("./middlewares/jwtVerifier");
+const credentials = require("./middlewares/credentials");
+
+// 3rd party middlewares
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+connectDB();
+
+// routers
+const employeesRouter = require("./routers/api/employees");
 const registerRouter = require("./routers/api/register");
 const authRouter = require("./routers/api/auth");
 const refreshTokenRoute = require("./routers/api/refreshToken");
 const logoutRoute = require("./routers/api/logout");
 const userRouter = require("./routers/api/user");
-const { verifyJWT } = require("./middlewares/jwtVerifier");
-const cookieParser = require("cookie-parser");
-const credentials = require("./middlewares/credentials");
-require("dotenv").config();
-const mongoose = require("mongoose");
 
-const connectDB = require("./config/dbConfig");
+// constant
+const PORT = process.env.PORT || 3500;
 
-connectDB();
 const app = express();
 // let use some buildin middlewares
 
@@ -52,9 +63,7 @@ app.use("/subdir", express.static(path.join(__dirname, "public")));
 //applying new router which is a middlewire buildin
 
 // non protected routes
-app.use("/", rootRouter);
 app.use("/register", registerRouter);
-app.use("/subdir", subdirRouter);
 app.use("/auth", authRouter);
 app.use("/refresh", refreshTokenRoute);
 app.use("/logout", logoutRoute);

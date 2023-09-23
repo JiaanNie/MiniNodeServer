@@ -1,9 +1,3 @@
-const userDB = {
-  users: require("../model/users.json"),
-  setUsers: function (data) {
-    this.users = data;
-  },
-};
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const User = require("../model/User");
@@ -12,6 +6,7 @@ dotenv.config();
 const handleRefreshToken = async (req, res) => {
   const cookie = req.cookies;
   // optional chaining
+  console.log(cookie);
   if (!cookie?.jwt) return res.status(401).json({ message: "missing cookie" });
   // at this point we have the refresh token
   const token = cookie.jwt;
@@ -33,9 +28,12 @@ const handleRefreshToken = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15s" }
+      { expiresIn: "10s" }
     );
-    res.status(200).json({ accessToken: accessToken });
+    res.status(200).json({
+      accessToken: accessToken,
+      roles: Object.values(foundUser.roles),
+    });
   });
 };
 module.exports = { handleRefreshToken };

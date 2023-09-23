@@ -1,9 +1,3 @@
-const userDB = {
-  users: require("../model/users.json"),
-  setUsers: function (data) {
-    this.users = data;
-  },
-};
 const bcrypt = require("bcrypt");
 const fsPromises = require("fs").promises;
 const jwt = require("jsonwebtoken");
@@ -54,14 +48,14 @@ const handleLogin = async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15s" }
+    { expiresIn: "10s" }
   );
 
   // create refresh token
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "15s" }
+    { expiresIn: "1d" }
   );
   // after creating two tokens we want to update the user's refresh token
   await foundUser.updateOne({ refreshToken });
