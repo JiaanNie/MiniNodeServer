@@ -6,7 +6,6 @@ dotenv.config();
 const handleRefreshToken = async (req, res) => {
   const cookie = req.cookies;
   // optional chaining
-  console.log(cookie);
   if (!cookie?.jwt) return res.status(401).json({ message: "missing cookie" });
   // at this point we have the refresh token
   const token = cookie.jwt;

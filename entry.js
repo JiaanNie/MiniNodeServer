@@ -52,7 +52,6 @@ app.use(credentials);
 //3party middlewares cors
 
 app.use(cors(corsOptions));
-console.log(process.env.PREFIX, process.env.SERVER);
 
 app.use(errorHanlder);
 
@@ -75,51 +74,6 @@ app.use("/users", userRouter);
 // custom middlewares
 app.use(logger);
 
-// all the anonymous callback function within the get function they are call the route handlers,
-// you can chain them together
-// example 1
-// app.get("/hello(.html)?", (req, res, next) => {
-//     console.log('trying to load hello.html')
-//     next()
-// }, (req, res)=> {
-//     // get redict to new page instead
-//     res.redirect(301, '/index')
-// })
-
-// // example 2
-
-// const routerHandler1 = (req, res, next) => {
-//     console.log("1")
-//     next()
-// }
-
-// const routerHandler2 = (req, res, next) => {
-//     console.log("2")
-//     next()
-// }
-
-// const routerHandler3 = (req, res) => {
-//     console.log("finished")
-// }
-
-// app.get("/chain", [routerHandler1, routerHandler2, routerHandler3])
-
-// if we didnt catch other url path that is the default response to the request
-// this running like a waterfall it check the first get call then going down untill we reach to the end of this file.
-// app.get('/*', (req, res) => {
-//     // without the status function call we would return 200 instead of 404
-//     res.status(404).sendFile(path.join(__dirname, "views", "404.html"))
-// })
-app.all("*", (req, res) => {
-  res.status(404);
-  if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "views", "404.html"));
-  } else if (req.accepts("json")) {
-    res.json({ erro: "404 not found" });
-  } else {
-    res.type("txt").send("404 not found");
-  }
-});
 // adding custom error handler middleware
 // the order of the param does matter ahhhh
 mongoose.connection.once("open", () => {

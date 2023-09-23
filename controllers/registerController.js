@@ -18,7 +18,6 @@ const handleNewUser = async (req, res) => {
   // we need check if the db already contain the user
   // userDB.users is an array of object where each contain username and hasedPassword
   const foundUser = await User.findOne({ username: username }).exec();
-  console.log(foundUser);
   if (foundUser)
     return res.status(409).json({ message: "username already exist!" });
 

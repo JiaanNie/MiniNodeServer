@@ -4,7 +4,6 @@ const DBURI = `${process.env.PREFIX}${process.env.MONGO_DB_USER}:${process.env.M
 
 const connectDB = async () => {
   try {
-    console.log(DBURI);
     await mongoose.connect(DBURI, {
       useUnifiedTopology: true,
       useNewUrlParser: true,

@@ -30,7 +30,6 @@ const handleLogin = async (req, res) => {
   //     }
   // })
   const foundUser = await User.findOne({ username }).exec();
-  console.log(foundUser);
 
   if (!foundUser) return res.status(401).json({ message: "unauthorized" });
   // vaildate the password
